@@ -117,8 +117,8 @@ export function Sidebar() {
   const pathname = usePathname()
 
   return (
-    <div className="hidden border-r bg-muted/40 md:block w-64">
-      <div className="flex h-screen max-h-screen flex-col">
+    <div className="hidden border-r bg-muted/40 md:block w-64 h-screen sticky top-0">
+      <div className="flex h-full flex-col">
         <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
           <Link href="/wiki" className="flex items-center gap-2 font-semibold">
             <BookOpen className="h-5 w-5" />
