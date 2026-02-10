@@ -219,44 +219,153 @@ export default function Page() {
       cube.castShadow = true
       scene.add(cube)
 
+      // Generate random path (1-4)
+      const pathIndex = Math.floor(Math.random() * 4) + 1
       let time = 0
+      
       function animateCube() {
         time += 0.01
         
-        // Simple bouncing animation
-        cube.position.y = -0.4 + Math.abs(Math.sin(time)) * 0.6
-        cube.rotation.x = Math.sin(time * 0.5) * Math.PI / 4
-        cube.rotation.y = time * 0.5
+        // Different paths based on random selection
+        switch(pathIndex) {
+          case 1: // Original path - simple bounce
+            cube.position.y = -0.4 + Math.abs(Math.sin(time)) * 0.6
+            cube.rotation.x = Math.sin(time * 0.5) * Math.PI / 4
+            cube.rotation.y = time * 0.5
+            cube.position.z = 0.5
+            break
+            
+          case 2: // Circular path around center
+            const radius = 1.5
+            cube.position.x = Math.cos(time * 0.8) * radius
+            cube.position.z = Math.sin(time * 0.8) * radius + 0.5
+            cube.position.y = -0.4 + Math.abs(Math.sin(time * 1.5)) * 0.3
+            cube.rotation.x = Math.sin(time * 0.3) * Math.PI / 6
+            cube.rotation.y = time * 0.6
+            break
+            
+          case 3: // Figure-8 path
+            const fig8Radius = 1.2
+            cube.position.x = Math.cos(time * 0.7) * fig8Radius
+            cube.position.y = Math.sin(time * 1.4) * 0.8 - 0.2
+            cube.position.z = Math.sin(time * 0.7) * fig8Radius * 0.5 + 0.5
+            cube.rotation.x = Math.sin(time * 0.4) * Math.PI / 3
+            cube.rotation.z = Math.cos(time * 0.7) * Math.PI / 4
+            break
+            
+          case 4: // Diagonal bounce pattern
+            const diagonalTime = time * 0.6
+            cube.position.x = Math.sin(diagonalTime) * 2
+            cube.position.z = Math.cos(diagonalTime) * 1.5 + 0.5
+            cube.position.y = -0.4 + Math.abs(Math.sin(diagonalTime * 2)) * 0.6
+            cube.rotation.x = diagonalTime * 0.5
+            cube.rotation.y = diagonalTime * 0.8
+            cube.rotation.z = Math.sin(diagonalTime * 0.3) * Math.PI / 6
+            break
+        }
         
         // Fade in/out based on height
         cube.material.opacity = 0.3 + Math.abs(Math.sin(time)) * 0.7
         
-        // Try to use GSAP if available
+        // Try to use GSAP if available for better animation
         if (gsap && !window.cubeAnimated) {
           window.cubeAnimated = true
           try {
             const tl = gsap.timeline({ repeat: -1, repeatDelay: Animation.delay })
-            tl.set(cube.material, { opacity: 0 })
-            tl.to(cube.position, 0.8, { y: -0.4, ease: "bounce.out" })
-            tl.to(cube.scale, 0.8, { y: 1, ease: "bounce.out" }, "-=0.8")
-            tl.to(cube.material, 0.5, { opacity: 1 }, "-=0.8")
-            tl.to(cube.rotation, 0.8, { x: getDegree(-90) }, "+=0.2")
-            tl.to(cube.position, 0.3, { y: -0.2 }, "-=0.8")
-            tl.to(cube.position, 0.8, { z: -0.5 }, "-=0.8")
-            tl.to(cube.position, 0.3, { y: -0.4 }, "-=0.4")
-            tl.to(cube.rotation, 0.8, { y: getDegree(-90) })
-            tl.to(cube.position, 0.3, { y: -0.2 }, "-=0.8")
-            tl.to(cube.position, 0.8, { x: -1 }, "-=0.8")
-            tl.to(cube.position, 0.3, { y: -0.4 }, "-=0.4")
-            tl.to(cube.rotation, 0.8, { x: 0, ease: "power3.out" })
-            tl.to(cube.position, 0.8, { z: 0.8, ease: "power3.out" }, "-=0.8")
-            tl.to(cube.position, 0.6, { y: -4, ease: "power3.in" }, "-=0.80")
-            tl.to(cube.scale, 0.8, { y: 1.5 }, "-=0.5")
-            tl.to(cube.material, 0.25, { opacity: 0 }, "-=0.85")
+            
+            // Different GSAP animations for each path
+            if (pathIndex === 1) {
+              // Original bounce animation
+              tl.set(cube.material, { opacity: 0 })
+              tl.to(cube.position, 0.8, { y: -0.4, ease: "bounce.out" })
+              tl.to(cube.scale, 0.8, { y: 1, ease: "bounce.out" }, "-=0.8")
+              tl.to(cube.material, 0.5, { opacity: 1 }, "-=0.8")
+              tl.to(cube.rotation, 0.8, { x: getDegree(-90) }, "+=0.2")
+              tl.to(cube.position, 0.3, { y: -0.2 }, "-=0.8")
+              tl.to(cube.position, 0.8, { z: -0.5 }, "-=0.8")
+              tl.to(cube.position, 0.3, { y: -0.4 }, "-=0.4")
+              tl.to(cube.rotation, 0.8, { y: getDegree(-90) })
+              tl.to(cube.position, 0.3, { y: -0.2 }, "-=0.8")
+              tl.to(cube.position, 0.8, { x: -1 }, "-=0.8")
+              tl.to(cube.position, 0.3, { y: -0.4 }, "-=0.4")
+              tl.to(cube.rotation, 0.8, { x: 0, ease: "power3.out" })
+              tl.to(cube.position, 0.8, { z: 0.8, ease: "power3.out" }, "-=0.8")
+              tl.to(cube.position, 0.6, { y: -4, ease: "power3.in" }, "-=0.80")
+              tl.to(cube.scale, 0.8, { y: 1.5 }, "-=0.5")
+              tl.to(cube.material, 0.25, { opacity: 0 }, "-=0.85")
+            } else if (pathIndex === 2) {
+              // Circular path animation
+              tl.set(cube.material, { opacity: 0 })
+              tl.to(cube.position, 1.2, { 
+                x: 1.5, 
+                ease: "power2.inOut" 
+              })
+              tl.to(cube.rotation, 1.2, { y: Math.PI * 2 }, "-=1.2")
+              tl.to(cube.position, 1.2, { z: -1, ease: "power2.inOut" })
+              tl.to(cube.position, 1.2, { 
+                x: -1.5, 
+                y: -0.2,
+                ease: "bounce.out"
+              }, "-=1.2")
+              tl.to(cube.material, 0.5, { opacity: 1 }, "-=0.5")
+            } else if (pathIndex === 3) {
+              // Figure-8 path animation
+              tl.set(cube.material, { opacity: 0 })
+              tl.to(cube.position, 1.0, { 
+                x: 1.2, 
+                y: -1,
+                ease: "power4.inOut"
+              })
+              tl.to(cube.position, 0.8, { 
+                x: -1.2, 
+                y: -0.4,
+                ease: "bounce.out"
+              })
+              tl.to(cube.position, 0.8, { 
+                x: 0, 
+                z: 1,
+                ease: "power2.inOut"
+              })
+              tl.to(cube.rotation, 0.8, { 
+                x: Math.PI / 3,
+                y: Math.PI / 2
+              })
+            } else if (pathIndex === 4) {
+              // Diagonal bounce animation
+              tl.set(cube.material, { opacity: 0 })
+              tl.to(cube.position, 1.5, { 
+                x: 2, 
+                y: -0.4,
+                ease: "power2.inOut"
+              })
+              tl.to(cube.position, 1.0, { 
+                x: -2, 
+                z: 1.5,
+                ease: "power3.out"
+              })
+              tl.to(cube.position, 0.8, { 
+                y: -0.2,
+                ease: "bounce.out"
+              })
+              tl.to(cube.rotation, 0.8, { 
+                x: Math.PI / 6,
+                y: Math.PI / 3,
+                z: Math.PI / 4
+              })
+            }
+            
             tl.timeScale(Animation.duration)
           } catch (e) {
             console.log('GSAP animation failed, using simple animation')
           }
+        }
+      }
+      
+      console.log(`Cube path: ${pathIndex}`)
+      
+      // Use simple animation initially
+      animateCube()
+    }
         }
       }
       
