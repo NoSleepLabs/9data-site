@@ -24,7 +24,8 @@ import {
   Lock,
   CheckCircle,
   Clock,
-  Zap
+  Zap,
+  ArrowLeft
 } from "lucide-react"
 
 const navigation = [
@@ -117,14 +118,15 @@ export function Sidebar() {
 
   return (
     <div className="hidden border-r bg-muted/40 md:block w-64">
-      <div className="flex h-full max-h-screen flex-col gap-2">
+      <div className="flex h-screen max-h-screen flex-col">
         <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
           <Link href="/wiki" className="flex items-center gap-2 font-semibold">
             <BookOpen className="h-5 w-5" />
             <span>9Data Wiki</span>
           </Link>
         </div>
-        <ScrollArea className="flex-1 px-4 py-4">
+        <div className="flex-1 overflow-hidden">
+          <ScrollArea className="h-full px-4 py-4">
           <div className="space-y-4">
             {navigation.map((section) => (
               <div key={section.title} className="pb-4">
@@ -152,7 +154,17 @@ export function Sidebar() {
               </div>
             ))}
           </div>
-        </ScrollArea>
+          </ScrollArea>
+        </div>
+        <div className="border-t p-4">
+          <Link 
+            href="/" 
+            className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back to Home
+          </Link>
+        </div>
       </div>
     </div>
   )

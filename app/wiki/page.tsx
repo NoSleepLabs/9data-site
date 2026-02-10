@@ -1,4 +1,6 @@
-import { Metadata } from "next"
+"use client"
+
+import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -48,6 +50,17 @@ const stats = [
 ]
 
 export default function WikiHome() {
+  const [searchQuery, setSearchQuery] = useState("")
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (searchQuery.trim()) {
+      // Search across all wiki pages by filtering page content
+      // For now, open Google search for the query
+      window.open(`https://www.google.com/search?q=site:9data.us+${encodeURIComponent(searchQuery)}`, '_blank')
+    }
+  }
+
   return (
     <div className="space-y-8">
       {/* Hero Section */}
@@ -56,6 +69,23 @@ export default function WikiHome() {
           <BookOpen className="h-8 w-8" />
           <h1 className="text-3xl font-bold">9Data API Documentation</h1>
         </div>
+        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          Complete documentation for 9Data Private Data Processing API. 
+          Build powerful data-driven applications with our secure, scalable infrastructure.
+        </p>
+        
+        {/* Search Bar */}
+        <form onSubmit={handleSearch} className="relative max-w-md mx-auto">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input 
+            type="search"
+            placeholder="Search documentation..." 
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-10"
+          />
+        </form>
+      </div>
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
           Complete documentation for the 9Data Private Data Processing API. 
           Build powerful data-driven applications with our secure, scalable infrastructure.
