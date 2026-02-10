@@ -366,7 +366,6 @@ export default function Page() {
       // Use simple animation initially
       animateCube()
     }
-        }
       }
       
       animateCube()
