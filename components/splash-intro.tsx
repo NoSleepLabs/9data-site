@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import Image from "next/image"
-import { WebGLCanvas } from "./webgl-canvas"
+import { WebGPUCanvas } from "./webgpu-canvas"
 
 export function SplashIntro({ onComplete }: { onComplete: () => void }) {
   const [phase, setPhase] = useState<
@@ -28,38 +28,111 @@ export function SplashIntro({ onComplete }: { onComplete: () => void }) {
         phase === "exit" ? "opacity-0 pointer-events-none" : "opacity-100"
       }`}
     >
-      {/* WebGL Background */}
-      <div className="absolute inset-0 opacity-30">
-        <WebGLCanvas className="w-full h-full" />
+      {/* WebGPU Background */}
+      <div className="absolute inset-0">
+        <WebGPUCanvas className="w-full h-full" />
       </div>
 
       <div className="relative flex flex-col items-center">
-        {/* Spinning logo */}
+        {/* 3D Spinning logo container */}
         <div
           className="relative z-10"
           style={{
-            animation:
-              phase === "spin"
-                ? "splash-spin 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards"
-                : undefined,
+            perspective: "1000px",
+            transformStyle: "preserve-3d",
           }}
         >
-          <Image
-            src="https://files.catbox.moe/xmthif.png"
-            alt="9Data"
-            width={80}
-            height={80}
-            className="dark:invert"
-            priority
-          />
-          {/* Glow ring */}
           <div
-            className={`absolute -inset-4 -z-10 rounded-full blur-2xl transition-opacity duration-1000 bg-primary/10 ${
-              phase === "hold" || phase === "exit"
-                ? "opacity-40"
-                : "opacity-0"
-            }`}
-          />
+            className="relative"
+            style={{
+              animation:
+                phase === "spin"
+                  ? "splash-3d-spin 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards, splash-3d-rotate 3s linear infinite"
+                  : phase === "text" || phase === "hold"
+                  ? "splash-3d-rotate 3s linear infinite"
+                  : undefined,
+              transformStyle: "preserve-3d",
+            }}
+          >
+            {/* Multiple logo layers for depth effect */}
+            <div className="relative" style={{ transformStyle: "preserve-3d" }}>
+              {/* Front layer */}
+              <div
+                className="absolute"
+                style={{
+                  transform: "translateZ(20px)",
+                }}
+              >
+                <Image
+                  src="https://files.catbox.moe/xmthif.png"
+                  alt="9Data Front"
+                  width={80}
+                  height={80}
+                  className="dark:invert opacity-90"
+                  priority
+                />
+              </div>
+              
+              {/* Middle layer */}
+              <div
+                className="absolute"
+                style={{
+                  transform: "translateZ(0px) scale(0.9)",
+                  opacity: 0.6,
+                }}
+              >
+                <Image
+                  src="https://files.catbox.moe/xmthif.png"
+                  alt="9Data Middle"
+                  width={80}
+                  height={80}
+                  className="dark:invert"
+                  priority
+                />
+              </div>
+              
+              {/* Back layer */}
+              <div
+                className="absolute"
+                style={{
+                  transform: "translateZ(-20px) scale(0.8)",
+                  opacity: 0.3,
+                }}
+              >
+                <Image
+                  src="https://files.catbox.moe/xmthif.png"
+                  alt="9Data Back"
+                  width={80}
+                  height={80}
+                  className="dark:invert blur-sm"
+                  priority
+                />
+              </div>
+            </div>
+            
+            {/* 3D Glow rings */}
+            <div
+              className={`absolute -inset-8 rounded-full transition-opacity duration-1000 ${
+                phase === "hold" || phase === "exit"
+                  ? "opacity-60"
+                  : "opacity-20"
+              }`}
+              style={{
+                background: "radial-gradient(circle, rgba(34, 197, 94, 0.3) 0%, transparent 70%)",
+                transform: "rotateX(60deg) translateZ(-30px)",
+              }}
+            />
+            <div
+              className={`absolute -inset-6 rounded-full border-2 transition-opacity duration-1000 ${
+                phase === "hold" || phase === "exit"
+                  ? "opacity-40 border-primary/40"
+                  : "opacity-10 border-primary/20"
+              }`}
+              style={{
+                transform: "rotateX(60deg) translateZ(-25px)",
+              }}
+            />
+          </div>
         </div>
 
         {/* Text slides up from beneath the logo */}
@@ -114,18 +187,36 @@ export function SplashIntro({ onComplete }: { onComplete: () => void }) {
       </div>
 
       <style jsx>{`
-        @keyframes splash-spin {
+        @keyframes splash-3d-spin {
           0% {
-            transform: scale(0.3) rotate(-360deg);
+            transform: scale(0.3) rotateY(-360deg) rotateX(-180deg);
             opacity: 0;
           }
           60% {
-            transform: scale(1.05) rotate(0deg);
+            transform: scale(1.1) rotateY(0deg) rotateX(0deg);
             opacity: 1;
           }
           100% {
-            transform: scale(1) rotate(0deg);
+            transform: scale(1) rotateY(0deg) rotateX(0deg);
             opacity: 1;
+          }
+        }
+        
+        @keyframes splash-3d-rotate {
+          0% {
+            transform: rotateY(0deg) rotateX(0deg);
+          }
+          25% {
+            transform: rotateY(90deg) rotateX(15deg);
+          }
+          50% {
+            transform: rotateY(180deg) rotateX(0deg);
+          }
+          75% {
+            transform: rotateY(270deg) rotateX(-15deg);
+          }
+          100% {
+            transform: rotateY(360deg) rotateX(0deg);
           }
         }
       `}</style>
