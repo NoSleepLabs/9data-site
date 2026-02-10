@@ -28,18 +28,15 @@ export default function Page() {
             : "opacity-0 translate-y-4"
         }`}
       >
-        <div className="relative z-10">
-            <Navbar onOpenDemo={() => setDemoOpen(true)} />
-            <Hero />
-            <About />
-            <HowItWorks />
-            <Services />
-            <Clients />
-            <Budgets />
-            <CTA />
-            <Footer />
-          </div>
-        </div>
+        <Navbar onOpenDemo={() => setDemoOpen(true)} />
+        <Hero />
+        <About />
+        <HowItWorks />
+        <Services />
+        <Clients />
+        <Budgets />
+        <CTA />
+        <Footer />
       </main>
 
       <SSHDemo isOpen={demoOpen} onClose={() => setDemoOpen(false)} />
