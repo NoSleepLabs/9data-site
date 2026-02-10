@@ -1,44 +1,73 @@
 "use client"
 
-import { useEffect, useRef } from "react"
-import { Navbar } from "@/components/navbar"
-import { Footer } from "@/components/footer"
+import { useEffect, useRef, useState } from "react"
 
 export default function Page() {
   const canvasRef = useRef<HTMLDivElement>(null)
-  const containerRef = useRef<HTMLDivElement>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    if (!containerRef.current) return
+    // Check if scripts already loaded
+    if ((window as any).THREE && (window as any).gsap) {
+      initAnimation()
+      return
+    }
 
     // Load Three.js dynamically
-    const loadThree = async () => {
-      if (typeof window !== 'undefined') {
-        // Add Three.js script
+    const loadScripts = async () => {
+      try {
+        // Add Three.js script first
         const script = document.createElement('script')
         script.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js'
-        script.async = true
+        script.async = false // Load synchronously
         
         // Add GSAP script
         const gsapScript = document.createElement('script')
         gsapScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js'
-        gsapScript.async = true
+        gsapScript.async = false
         
         document.head.appendChild(script)
         document.head.appendChild(gsapScript)
         
-        script.onload = () => {
-          gsapScript.onload = () => {
-            // Three.js is loaded, now init the scene
-            if ((window as any).THREE && (window as any).gsap) {
-              initAnimation()
-            }
+        // Wait for scripts to load
+        const checkScripts = () => {
+          if ((window as any).THREE && (window as any).gsap) {
+            console.log('Scripts loaded, initializing animation')
+            initAnimation()
+            setIsLoading(false)
+          } else {
+            console.log('Waiting for scripts...')
+            setTimeout(checkScripts, 100)
           }
         }
+        
+        script.onload = () => {
+          gsapScript.onload = () => {
+            checkScripts()
+          }
+        }
+        
+        script.onerror = () => {
+          console.error('Failed to load Three.js')
+          setError('Failed to load 3D engine')
+          setIsLoading(false)
+        }
+        
+        gsapScript.onerror = () => {
+          console.error('Failed to load GSAP')
+          setError('Failed to load animation library')
+          setIsLoading(false)
+        }
+
+      } catch (err) {
+        console.error('Script loading error:', err)
+        setError('Loading error')
+        setIsLoading(false)
       }
     }
 
-    loadThree()
+    loadScripts()
 
     function initAnimation() {
       const THREE = (window as any).THREE
@@ -78,13 +107,15 @@ export default function Page() {
         camera.position.set(7, 5, 5)
         camera.lookAt(scene.position)
 
-        renderer = new THREE.WebGLRenderer({ antialias: true })
+        renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
         renderer.setClearColor(new THREE.Color(Animation.colors.background), 1)
         renderer.shadowMap.enabled = true
         renderer.shadowMap.type = THREE.PCFSoftShadowMap
         renderer.setSize(windowWidth, windowHeight)
+        renderer.setPixelRatio(window.devicePixelRatio)
 
         if (canvasRef.current) {
+          canvasRef.current.innerHTML = '' // Clear any existing content
           canvasRef.current.appendChild(renderer.domElement)
         }
 
@@ -92,11 +123,13 @@ export default function Page() {
         
         function windowResize() {
           if (renderer && camera) {
-            renderer.setSize(window.innerWidth, window.innerHeight)
-            camera.left = -window.innerWidth / factor
-            camera.right = window.innerWidth / factor
-            camera.top = window.innerHeight / factor
-            camera.bottom = -window.innerHeight / factor
+            const newWidth = window.innerWidth
+            const newHeight = window.innerHeight
+            renderer.setSize(newWidth, newHeight)
+            camera.left = -newWidth / factor
+            camera.right = newWidth / factor
+            camera.top = newHeight / factor
+            camera.bottom = -newHeight / factor
             camera.updateProjectionMatrix()
           }
         }
@@ -151,26 +184,50 @@ export default function Page() {
         cube.castShadow = true
         scene.add(cube)
 
-        // GSAP Animation
-        const tl = gsap.timeline({ repeat: -1, repeatDelay: Animation.delay })
-        tl.set(cube.material, { opacity: 0 })
-        tl.to(cube.position, 0.8, { y: -0.4, ease: "bounce.out" })
-        tl.to(cube.scale, 0.8, { y: 1, ease: "bounce.out" }, "-=0.8")
-        tl.to(cube.material, 0.5, { opacity: 1 }, "-=0.8")
-        tl.to(cube.rotation, 0.8, { x: getDegree(-90) }, "+=0.2")
-        tl.to(cube.position, 0.3, { y: -0.2 }, "-=0.8")
-        tl.to(cube.position, 0.8, { z: -0.5 }, "-=0.8")
-        tl.to(cube.position, 0.3, { y: -0.4 }, "-=0.4")
-        tl.to(cube.rotation, 0.8, { y: getDegree(-90) })
-        tl.to(cube.position, 0.3, { y: -0.2 }, "-=0.8")
-        tl.to(cube.position, 0.8, { x: -1 }, "-=0.8")
-        tl.to(cube.position, 0.3, { y: -0.4 }, "-=0.4")
-        tl.to(cube.rotation, 0.8, { x: 0, ease: "power3.out" })
-        tl.to(cube.position, 0.8, { z: 0.8, ease: "power3.out" }, "-=0.8")
-        tl.to(cube.position, 0.6, { y: -4, ease: "power3.in" }, "-=0.80")
-        tl.to(cube.scale, 0.8, { y: 1.5 }, "-=0.5")
-        tl.to(cube.material, 0.25, { opacity: 0 }, "-=0.85")
-        tl.timeScale(Animation.duration)
+        // Simple animation without GSAP initially
+        let time = 0
+        function animateCube() {
+          time += 0.01
+          
+          // Simple bouncing animation
+          cube.position.y = -0.4 + Math.abs(Math.sin(time)) * 0.6
+          cube.rotation.x = Math.sin(time * 0.5) * Math.PI / 4
+          cube.rotation.y = time * 0.5
+          
+          // Fade in/out based on height
+          cube.material.opacity = 0.3 + Math.abs(Math.sin(time)) * 0.7
+          
+          // Try to use GSAP if available for better animation
+          if (gsap && !window.cubeAnimated) {
+            window.cubeAnimated = true
+            try {
+              const tl = gsap.timeline({ repeat: -1, repeatDelay: Animation.delay })
+              tl.set(cube.material, { opacity: 0 })
+              tl.to(cube.position, 0.8, { y: -0.4, ease: "bounce.out" })
+              tl.to(cube.scale, 0.8, { y: 1, ease: "bounce.out" }, "-=0.8")
+              tl.to(cube.material, 0.5, { opacity: 1 }, "-=0.8")
+              tl.to(cube.rotation, 0.8, { x: getDegree(-90) }, "+=0.2")
+              tl.to(cube.position, 0.3, { y: -0.2 }, "-=0.8")
+              tl.to(cube.position, 0.8, { z: -0.5 }, "-=0.8")
+              tl.to(cube.position, 0.3, { y: -0.4 }, "-=0.4")
+              tl.to(cube.rotation, 0.8, { y: getDegree(-90) })
+              tl.to(cube.position, 0.3, { y: -0.2 }, "-=0.8")
+              tl.to(cube.position, 0.8, { x: -1 }, "-=0.8")
+              tl.to(cube.position, 0.3, { y: -0.4 }, "-=0.4")
+              tl.to(cube.rotation, 0.8, { x: 0, ease: "power3.out" })
+              tl.to(cube.position, 0.8, { z: 0.8, ease: "power3.out" }, "-=0.8")
+              tl.to(cube.position, 0.6, { y: -4, ease: "power3.in" }, "-=0.80")
+              tl.to(cube.scale, 0.8, { y: 1.5 }, "-=0.5")
+              tl.to(cube.material, 0.25, { opacity: 0 }, "-=0.85")
+              tl.timeScale(Animation.duration)
+            } catch (e) {
+              console.log('GSAP animation failed, using simple animation')
+            }
+          }
+        }
+        
+        // Use simple animation initially
+        animateCube()
       }
 
       function render() {
@@ -238,6 +295,34 @@ export default function Page() {
           z-index: 1;
         }
       `}</style>
+
+      {/* Canvas Container */}
+      {/* Loading Indicator */}
+      {isLoading && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black z-50">
+          <div className="text-center">
+            <div className="mb-4">
+              <div className="w-8 h-8 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto"></div>
+            </div>
+            <p className="text-white font-mono text-sm">Loading 3D Engine...</p>
+          </div>
+        </div>
+      )}
+
+      {/* Error State */}
+      {error && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black z-50">
+          <div className="text-center text-white">
+            <p className="mb-4 font-mono text-sm">Error: {error}</p>
+            <button 
+              onClick={() => window.location.reload()}
+              className="px-4 py-2 bg-white text-black font-mono text-sm rounded hover:bg-gray-200 transition-colors"
+            >
+              Retry
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Canvas Container */}
       <div ref={canvasRef} className="canvas-container" />
