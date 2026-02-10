@@ -2,6 +2,7 @@
 
 import Image from "next/image"
 import { useEffect, useState } from "react"
+import { WebGLCanvas } from "./webgl-canvas"
 
 export function Hero() {
   const [visible, setVisible] = useState(false)
@@ -98,6 +99,15 @@ export function Hero() {
         <span className="font-pixel text-xs text-muted-foreground animate-blink">
           {">"}_
         </span>
+      </div>
+
+      {/* 3D WebGL Visualization */}
+      <div
+        className={`absolute inset-0 opacity-20 transition-opacity duration-1000 delay-1000 ${
+          visible ? "opacity-20" : "opacity-0"
+        }`}
+      >
+        <WebGLCanvas className="w-full h-full" />
       </div>
 
       <div className="absolute bottom-0 left-0 right-0 h-px bg-border" />
