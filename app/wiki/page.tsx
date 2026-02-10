@@ -21,11 +21,6 @@ import {
 } from "lucide-react"
 import Link from "next/link"
 
-export const metadata: Metadata = {
-  title: "9Data API Documentation",
-  description: "Complete API documentation for 9Data Private Data Processing Group",
-}
-
 const quickLinks = [
   { title: "Quick Start", href: "/wiki/quick-start", icon: Zap, description: "Get up and running in minutes" },
   { title: "Authentication", href: "/wiki/authentication/api-keys", icon: Shield, description: "Secure your API access" },
