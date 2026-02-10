@@ -39,7 +39,7 @@ function HamburgerIcon({ isOpen }: { isOpen: boolean }) {
 
 export function Navbar({ onOpenDemo }: { onOpenDemo?: () => void }) {
   const [isOpen, setIsOpen] = useState(false)
-  const [closing, setClosing] = useState(false)
+
   const [scrolled, setScrolled] = useState(false)
   const { setTheme, resolvedTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
@@ -56,23 +56,15 @@ export function Navbar({ onOpenDemo }: { onOpenDemo?: () => void }) {
   const isDark = resolvedTheme === "dark"
 
   const handleClose = () => {
-    setClosing(true)
-    setTimeout(() => {
-      setIsOpen(false)
-      setClosing(false)
-    }, 600)
+    setIsOpen(false)
   }
 
   const handleToggle = () => {
-    if (isOpen) {
-      handleClose()
-    } else {
-      setIsOpen(true)
-    }
+    setIsOpen(!isOpen)
   }
 
   const handleLinkClick = () => {
-    handleClose()
+    setIsOpen(false)
   }
 
   return (
@@ -130,7 +122,7 @@ export function Navbar({ onOpenDemo }: { onOpenDemo?: () => void }) {
               className="relative z-[60] p-1"
               aria-label={isOpen ? "Close menu" : "Open menu"}
             >
-              <HamburgerIcon isOpen={isOpen && !closing} />
+              <HamburgerIcon isOpen={isOpen} />
             </button>
           </div>
         </div>
@@ -141,10 +133,7 @@ export function Navbar({ onOpenDemo }: { onOpenDemo?: () => void }) {
         <>
           {/* Backdrop */}
           <div
-            className={`fixed inset-0 z-40 transition-all duration-300 ease-out ${
-              closing ? "opacity-0" : "opacity-100"
-            }`}
-            style={{ backgroundColor: "hsl(var(--background) / 0.3)", backdropFilter: "blur(12px)" }}
+            className="fixed inset-0 z-40 bg-background/30 backdrop-blur-md transition-opacity duration-300"
             onClick={handleClose}
             onKeyDown={(e) => e.key === "Escape" && handleClose()}
             role="button"
@@ -155,13 +144,9 @@ export function Navbar({ onOpenDemo }: { onOpenDemo?: () => void }) {
           {/* Menu panel */}
           <div
             ref={menuRef}
-            className={`fixed top-1/2 left-1/2 z-50 w-80 transition-all duration-300 ease-out ${
-              closing
-                ? "scale-95 opacity-0"
-                : "scale-100 opacity-100"
-            }`}
+            className="fixed top-1/2 left-1/2 z-50 w-80 transition-all duration-300 ease-out"
             style={{
-              transform: `translate(-50%, -50%) ${closing ? 'scale(0.95)' : 'scale(1)'}`,
+              transform: "translate(-50%, -50%)",
             }}
           >
             <div className="overflow-hidden rounded-xl border border-border/40 bg-background/90 backdrop-blur-xl shadow-2xl">
@@ -177,13 +162,9 @@ export function Navbar({ onOpenDemo }: { onOpenDemo?: () => void }) {
                     key={link.href}
                     href={link.href}
                     onClick={handleLinkClick}
-                    className={`group flex items-center gap-3 rounded-lg px-3 py-2.5 transition-all duration-200 hover:bg-accent/60 ${
-                      closing
-                        ? "opacity-0 translate-x-4"
-                        : "opacity-100 translate-x-0"
-                    }`}
+                    className="group flex items-center gap-3 rounded-lg px-3 py-2.5 transition-all duration-200 hover:bg-accent/60 opacity-0 translate-x-20 animate-menuItemSlide"
                     style={{
-                      transitionDelay: closing ? "0ms" : `${i * 50}ms`,
+                      animationDelay: `${i * 30}ms`,
                     }}
                   >
                     <span className="h-1 w-1 rounded-full bg-muted-foreground/40 transition-all duration-200 group-hover:bg-foreground group-hover:w-2" />
@@ -203,13 +184,9 @@ export function Navbar({ onOpenDemo }: { onOpenDemo?: () => void }) {
                       handleClose()
                       setTimeout(() => onOpenDemo(), 400)
                     }}
-                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 transition-all duration-200 hover:bg-accent/60 sm:hidden ${
-                      closing
-                        ? "opacity-0 translate-x-4"
-                        : "opacity-100 translate-x-0"
-                    }`}
+                    className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 transition-all duration-200 hover:bg-accent/60 sm:hidden opacity-0 translate-x-20 animate-menuItemSlide"
                     style={{
-                      transitionDelay: closing ? "0ms" : `${navLinks.length * 50}ms`,
+                      animationDelay: `${navLinks.length * 30}ms`,
                     }}
                   >
                     <Terminal className="h-3 w-3 text-muted-foreground" />
