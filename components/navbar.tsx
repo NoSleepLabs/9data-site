@@ -15,35 +15,12 @@ const navLinks = [
   { label: "CONTACT", href: "#contact" },
 ]
 
-function HamburgerIcon({ isOpen }: { isOpen: boolean }) {
-  return (
-    <div className="relative h-5 w-6 cursor-pointer">
-      <span
-        className={`absolute left-0 h-[2px] w-full bg-foreground transition-all duration-300 ease-in-out ${
-          isOpen ? "top-1/2 -translate-y-1/2 rotate-45" : "top-0 rotate-0"
-        }`}
-      />
-      <span
-        className={`absolute left-0 top-1/2 h-[2px] w-full -translate-y-1/2 bg-foreground transition-all duration-300 ease-in-out ${
-          isOpen ? "opacity-0" : "opacity-100"
-        }`}
-      />
-      <span
-        className={`absolute left-0 h-[2px] w-full bg-foreground transition-all duration-300 ease-in-out ${
-          isOpen ? "top-1/2 -translate-y-1/2 -rotate-45" : "bottom-0 rotate-0"
-        }`}
-      />
-    </div>
-  )
-}
+
 
 export function Navbar({ onOpenDemo }: { onOpenDemo?: () => void }) {
-  const [isOpen, setIsOpen] = useState(false)
-
   const [scrolled, setScrolled] = useState(false)
   const { setTheme, resolvedTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
-  const menuRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => setMounted(true), [])
 
@@ -55,17 +32,7 @@ export function Navbar({ onOpenDemo }: { onOpenDemo?: () => void }) {
 
   const isDark = resolvedTheme === "dark"
 
-  const handleClose = () => {
-    setIsOpen(false)
-  }
 
-  const handleToggle = () => {
-    setIsOpen(!isOpen)
-  }
-
-  const handleLinkClick = () => {
-    setIsOpen(false)
-  }
 
   return (
     <>
@@ -114,96 +81,11 @@ export function Navbar({ onOpenDemo }: { onOpenDemo?: () => void }) {
                 <span className="hidden sm:inline">{isDark ? "GO LIGHT" : "GO DARK"}</span>
               </button>
             )}
-
-            {/* Hamburger */}
-            <button
-              type="button"
-              onClick={handleToggle}
-              className="relative z-[60] p-1"
-              aria-label={isOpen ? "Close menu" : "Open menu"}
-            >
-              <HamburgerIcon isOpen={isOpen} />
-            </button>
           </div>
         </div>
       </header>
 
-      {/* Floating overlay menu */}
-      {isOpen && (
-        <>
-          {/* Backdrop */}
-          <div
-            className="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm transition-opacity duration-300"
-            onClick={handleClose}
-            onKeyDown={(e) => e.key === "Escape" && handleClose()}
-            role="button"
-            tabIndex={-1}
-            aria-label="Close menu"
-          />
 
-          {/* Menu panel */}
-          <div
-            ref={menuRef}
-            className="fixed top-1/2 left-1/2 z-50 w-80 transition-all duration-300 ease-out"
-            style={{
-              transform: "translate(-50%, -50%)",
-            }}
-          >
-            <div className="overflow-hidden rounded-xl border border-border bg-background shadow-2xl">
-              {/* Menu header */}
-              <div className="border-b border-border px-5 py-3">
-                <span className="font-pixel text-[9px] text-muted-foreground tracking-widest">NAVIGATION</span>
-              </div>
-
-              {/* Links */}
-              <nav className="p-2">
-                {navLinks.map((link, i) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    onClick={handleLinkClick}
-                    className="group flex items-center gap-3 rounded-lg px-3 py-2.5 transition-all duration-200 hover:bg-accent"
-                    style={{
-                      animationDelay: `${i * 50}ms`,
-                      animation: "fadeInUp 0.3s ease-out forwards",
-                      opacity: 0,
-                      transform: "translateY(10px)",
-                    }}
-                  >
-                    <span className="h-1 w-1 rounded-full bg-muted-foreground/40 transition-all duration-200 group-hover:bg-foreground group-hover:w-2" />
-                    <span className="font-pixel text-[11px] text-muted-foreground transition-colors duration-200 group-hover:text-foreground tracking-wide">
-                      {link.label}
-                    </span>
-                  </Link>
-                ))}
-              </nav>
-
-              {/* Mobile demo button */}
-              {onOpenDemo && (
-                <div className="border-t border-border p-2">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      handleClose()
-                      setTimeout(() => onOpenDemo(), 400)
-                    }}
-                    className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 transition-all duration-200 hover:bg-accent sm:hidden"
-                    style={{
-                      animationDelay: `${navLinks.length * 50}ms`,
-                      animation: "fadeInUp 0.3s ease-out forwards",
-                      opacity: 0,
-                      transform: "translateY(10px)",
-                    }}
-                  >
-                    <Terminal className="h-3 w-3 text-muted-foreground" />
-                    <span className="font-pixel text-[11px] text-muted-foreground tracking-wide">DEMO</span>
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
-        </>
-      )}
     </>
   )
 }
