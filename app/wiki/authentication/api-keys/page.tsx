@@ -17,6 +17,8 @@ import {
   User,
   Terminal
 } from "lucide-react"
+"use client"
+
 import { useState } from "react"
 
 export const metadata: Metadata = {
