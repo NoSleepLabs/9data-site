@@ -11,19 +11,7 @@ const FlowingDotsBanner = ({ className = "" }: FlowingDotsBannerProps) => {
   const timeRef = useRef<number>(0)
   const animationFrameId = useRef<number | null>(null)
   const mouseRef = useRef({ x: 0, y: 0, isDown: false })
-  const flowPointsRef = useRef<
-    Array<{
-      x: number
-      y: number
-      vx: number
-      vy: number
-      angle: number
-      phase: number
-      noiseOffset: number
-      originalX: number
-      originalY: number
-    }>
-  >([])
+  const flowPointsRef = useRef<Array<any>>([])
 
   const noise = (x: number, y: number, t: number): number => {
     const sin1 = Math.sin(x * 0.01 + t)
@@ -156,8 +144,8 @@ const FlowingDotsBanner = ({ className = "" }: FlowingDotsBannerProps) => {
       if (nextY > canvas.height) point.y = 0
 
       const returnForce = 0.02
-      point.vx += (point.originalX - point.x) * returnForce
-      point.vy += (point.originalY - point.y) * returnForce
+      point.vx += (point.x - point.x) * returnForce
+      point.vy += (point.y - point.y) * returnForce
     })
 
     animationFrameId.current = requestAnimationFrame(animate)
