@@ -133,7 +133,7 @@ export function Navbar({ onOpenDemo }: { onOpenDemo?: () => void }) {
         <>
           {/* Backdrop */}
           <div
-            className="fixed inset-0 z-40 bg-background/30 backdrop-blur-md transition-opacity duration-300"
+            className="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm transition-opacity duration-300"
             onClick={handleClose}
             onKeyDown={(e) => e.key === "Escape" && handleClose()}
             role="button"
@@ -149,9 +149,9 @@ export function Navbar({ onOpenDemo }: { onOpenDemo?: () => void }) {
               transform: "translate(-50%, -50%)",
             }}
           >
-            <div className="overflow-hidden rounded-xl border border-border/40 bg-background/90 backdrop-blur-xl shadow-2xl">
+            <div className="overflow-hidden rounded-xl border border-border bg-background shadow-2xl">
               {/* Menu header */}
-              <div className="border-b border-border/20 px-5 py-3">
+              <div className="border-b border-border px-5 py-3">
                 <span className="font-pixel text-[9px] text-muted-foreground tracking-widest">NAVIGATION</span>
               </div>
 
@@ -162,9 +162,12 @@ export function Navbar({ onOpenDemo }: { onOpenDemo?: () => void }) {
                     key={link.href}
                     href={link.href}
                     onClick={handleLinkClick}
-                    className="group flex items-center gap-3 rounded-lg px-3 py-2.5 transition-all duration-200 hover:bg-accent/60 opacity-0 translate-x-20 animate-menuItemSlide"
+                    className="group flex items-center gap-3 rounded-lg px-3 py-2.5 transition-all duration-200 hover:bg-accent"
                     style={{
-                      animationDelay: `${i * 30}ms`,
+                      animationDelay: `${i * 50}ms`,
+                      animation: "fadeInUp 0.3s ease-out forwards",
+                      opacity: 0,
+                      transform: "translateY(10px)",
                     }}
                   >
                     <span className="h-1 w-1 rounded-full bg-muted-foreground/40 transition-all duration-200 group-hover:bg-foreground group-hover:w-2" />
@@ -177,16 +180,19 @@ export function Navbar({ onOpenDemo }: { onOpenDemo?: () => void }) {
 
               {/* Mobile demo button */}
               {onOpenDemo && (
-                <div className="border-t border-border/20 p-2">
+                <div className="border-t border-border p-2">
                   <button
                     type="button"
                     onClick={() => {
                       handleClose()
                       setTimeout(() => onOpenDemo(), 400)
                     }}
-                    className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 transition-all duration-200 hover:bg-accent/60 sm:hidden opacity-0 translate-x-20 animate-menuItemSlide"
+                    className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 transition-all duration-200 hover:bg-accent sm:hidden"
                     style={{
-                      animationDelay: `${navLinks.length * 30}ms`,
+                      animationDelay: `${navLinks.length * 50}ms`,
+                      animation: "fadeInUp 0.3s ease-out forwards",
+                      opacity: 0,
+                      transform: "translateY(10px)",
                     }}
                   >
                     <Terminal className="h-3 w-3 text-muted-foreground" />
