@@ -394,9 +394,6 @@ export default function Page() {
       {showIntro && (
         <>
           <style jsx global>{`
-            @import url('https://fonts.googleapis.com/css?family=Open+Sans:800');
-            @import url('https://fonts.googleapis.com/css?family=Dancing+Script:700');
-            
             html, body {
               margin: 0;
               padding: 0;
