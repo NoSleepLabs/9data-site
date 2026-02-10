@@ -9,7 +9,8 @@ import {
   Trash2,
   Plus,
   Table,
-  BarChart3
+  BarChart3,
+  CheckCircle
 } from "lucide-react"
 
 export const metadata: Metadata = {
