@@ -126,7 +126,7 @@ export function Sidebar() {
           </Link>
         </div>
         <div className="flex-1 overflow-hidden">
-          <ScrollArea className="h-full px-4 py-4">
+          <ScrollArea className="h-full px-4 py-4 scrollbar-hide">
           <div className="space-y-4">
             {navigation.map((section) => (
               <div key={section.title} className="pb-4">
