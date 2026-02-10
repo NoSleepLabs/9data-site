@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { Moon, Sun, Terminal } from "lucide-react"
+import { Moon, Sun, Terminal, BookOpen } from "lucide-react"
 import { useTheme } from "next-themes"
 
 const navLinks = [
@@ -12,7 +12,6 @@ const navLinks = [
   { label: "SERVICES", href: "#services" },
   { label: "CLIENTS", href: "#clients" },
   { label: "BUDGETS", href: "#budgets" },
-  { label: "WIKI", href: "/wiki" },
   { label: "CONTACT", href: "#contact" },
 ]
 
@@ -61,6 +60,15 @@ export function Navbar({ onOpenDemo }: { onOpenDemo?: () => void }) {
 
           {/* Right side controls */}
           <div className="flex items-center gap-3">
+            {/* Wiki Button - Always visible */}
+            <Link
+              href="/wiki"
+              className="flex items-center gap-1.5 rounded-md border border-border/60 px-3 py-1.5 font-pixel text-[10px] text-muted-foreground transition-all duration-200 hover:border-foreground/30 hover:text-foreground hover:bg-accent/50"
+            >
+              <BookOpen className="h-3 w-3" />
+              <span className="hidden sm:inline">WIKI</span>
+            </Link>
+
             {onOpenDemo && (
               <button
                 type="button"
