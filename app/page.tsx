@@ -87,11 +87,11 @@ export default function Page() {
 
     loadScripts()
 
-    // Auto complete after 6 seconds
+    // Auto complete after 5 seconds
     const timer = setTimeout(() => {
       console.log('Animation complete, showing main site')
       setShowIntro(false)
-    }, 6000)
+    }, 5000)
 
     return () => {
       clearTimeout(timer)
