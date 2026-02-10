@@ -88,7 +88,7 @@ export function Navbar({ onOpenDemo }: { onOpenDemo?: () => void }) {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3 group">
             <Image
-              src="/images/9data-logo.png"
+              src="https://files.catbox.moe/xmthif.png"
               alt="9Data logo"
               width={28}
               height={28}

@@ -49,7 +49,7 @@ export function SplashIntro({ onComplete }: { onComplete: () => void }) {
           }}
         >
           <Image
-            src="/images/9data-logo.png"
+            src="https://files.catbox.moe/xmthif.png"
             alt="9Data"
             width={80}
             height={80}

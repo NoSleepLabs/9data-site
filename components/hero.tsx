@@ -47,7 +47,7 @@ export function Hero() {
       >
         <div className="relative mb-8 md:mb-10">
           <Image
-            src="/images/9data-logo.png"
+            src="https://files.catbox.moe/xmthif.png"
             alt="9Data logo"
             width={64}
             height={64}
