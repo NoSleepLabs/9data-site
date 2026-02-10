@@ -305,17 +305,7 @@ export default function Page() {
             }
           `}</style>
 
-          {/* Loading Indicator */}
-          {isLoading && (
-            <div className="fixed inset-0 flex items-center justify-center bg-black z-50">
-              <div className="text-center">
-                <div className="mb-4">
-                  <div className="w-8 h-8 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto"></div>
-                </div>
-                <p className="text-white font-mono text-sm">Loading 3D Engine...</p>
-              </div>
-            </div>
-          )}
+
 
           {/* Error State */}
           {error && (
