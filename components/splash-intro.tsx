@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react"
 import Image from "next/image"
+import { WebGLCanvas } from "./webgl-canvas"
 
 export function SplashIntro({ onComplete }: { onComplete: () => void }) {
   const [phase, setPhase] = useState<
@@ -27,20 +28,15 @@ export function SplashIntro({ onComplete }: { onComplete: () => void }) {
         phase === "exit" ? "opacity-0 pointer-events-none" : "opacity-100"
       }`}
     >
-      {/* Subtle grid */}
-      <div
-        className="pointer-events-none absolute inset-0 opacity-[0.03]"
-        style={{
-          backgroundImage:
-            "linear-gradient(hsl(var(--foreground)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--foreground)) 1px, transparent 1px)",
-          backgroundSize: "48px 48px",
-        }}
-      />
+      {/* WebGL Background */}
+      <div className="absolute inset-0 opacity-30">
+        <WebGLCanvas className="w-full h-full" />
+      </div>
 
       <div className="relative flex flex-col items-center">
         {/* Spinning logo */}
         <div
-          className="relative"
+          className="relative z-10"
           style={{
             animation:
               phase === "spin"
