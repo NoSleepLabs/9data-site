@@ -24,9 +24,9 @@ export default function WikiLayout({
   }
 
   return (
-    <div className="flex min-h-screen bg-background">
+    <div className="flex h-screen bg-background">
       <Sidebar />
-      <main className="flex-1 overflow-auto scrollbar-hide">
+      <main className="flex-1 overflow-y-auto scrollbar-hide">
         <div className="border-b bg-muted/30">
           <div className="container mx-auto px-4 py-4 max-w-5xl">
             <div className="flex items-center justify-between gap-4">

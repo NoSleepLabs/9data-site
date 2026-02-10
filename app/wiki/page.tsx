@@ -41,7 +41,7 @@ const stats = [
   { label: "API Endpoints", value: "150+" },
   { label: "Uptime", value: "99.99%" },
   { label: "Response Time", value: "<50ms" },
-  { label: "Data Processed", value: "1PB+" },
+  { label: "Active Users", value: "10K+" },
 ]
 
 export default function WikiHome() {

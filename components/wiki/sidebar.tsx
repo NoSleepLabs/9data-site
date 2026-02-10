@@ -117,7 +117,7 @@ export function Sidebar() {
   const pathname = usePathname()
 
   return (
-    <div className="hidden border-r bg-muted/40 md:block w-64 h-screen sticky top-0">
+    <div className="hidden border-r bg-muted/40 md:block w-64 h-screen">
       <div className="flex h-full flex-col">
         <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
           <Link href="/wiki" className="flex items-center gap-2 font-semibold">
@@ -125,8 +125,8 @@ export function Sidebar() {
             <span>9Data Wiki</span>
           </Link>
         </div>
-        <div className="flex-1 overflow-hidden">
-          <ScrollArea className="h-full px-4 py-4 scrollbar-hide">
+        <div className="flex-1 overflow-y-auto">
+          <div className="px-4 py-4">
           <div className="space-y-4">
             {navigation.map((section) => (
               <div key={section.title} className="pb-4">
@@ -154,7 +154,7 @@ export function Sidebar() {
               </div>
             ))}
           </div>
-          </ScrollArea>
+        </div>
         </div>
         <div className="border-t p-4">
           <Link 
