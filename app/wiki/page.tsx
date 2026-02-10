@@ -92,13 +92,16 @@ export default function WikiHome() {
         </p>
         
         {/* Search Bar */}
-        <div className="relative max-w-md mx-auto">
+        <form onSubmit={handleSearch} className="relative max-w-md mx-auto">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input 
+            type="search"
             placeholder="Search documentation..." 
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-10"
           />
-        </div>
+        </form>
       </div>
 
       {/* Stats */}
