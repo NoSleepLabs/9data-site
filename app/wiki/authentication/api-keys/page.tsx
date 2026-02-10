@@ -1,4 +1,6 @@
-import { Metadata } from "next"
+"use client"
+
+import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -17,14 +19,8 @@ import {
   User,
   Terminal
 } from "lucide-react"
-"use client"
 
-import { useState } from "react"
 
-export const metadata: Metadata = {
-  title: "API Keys - 9Data Authentication",
-  description: "Managing API keys for 9Data API authentication",
-}
 
 const keyTypes = [
   {

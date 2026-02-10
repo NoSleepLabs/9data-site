@@ -1,6 +1,5 @@
 "use client"
 
-import { Metadata } from "next"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -18,10 +17,7 @@ import {
   ArrowRight
 } from "lucide-react"
 
-export const metadata: Metadata = {
-  title: "OAuth 2.0 - 9Data Authentication",
-  description: "OAuth 2.0 authentication guide for 9Data API",
-}
+
 
 const oauthFlow = [
   {
