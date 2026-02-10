@@ -19,6 +19,7 @@ export default function Page() {
   const [error, setError] = useState<string | null>(null)
   const canvasRef = useRef<HTMLDivElement>(null)
   const { resolvedTheme } = useTheme()
+  const [demoOpen, setDemoOpen] = useState(false)
 
   const handleIntroComplete = useCallback(() => {
     setShowIntro(false)
@@ -386,8 +387,6 @@ export default function Page() {
     newCube()
     render()
   }
-
-  const [demoOpen, setDemoOpen] = useState(false)
 
   return (
     <>
