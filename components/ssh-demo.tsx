@@ -671,8 +671,12 @@ export function SSHDemo({
   const [historyIdx, setHistoryIdx] = useState(-1)
   const [distro, setDistro] = useState("arch")
   const [booting, setBooting] = useState(true)
+  const [position, setPosition] = useState({ x: 0, y: 0 })
+  const [isDragging, setIsDragging] = useState(false)
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 })
   const inputRef = useRef<HTMLInputElement>(null)
   const scrollRef = useRef<HTMLDivElement>(null)
+  const terminalRef = useRef<HTMLDivElement>(null)
 
   const prompt = `9data@9data-main:${cwd === "/home/9data" ? "~" : cwd}$ `
 
@@ -803,6 +807,48 @@ export function SSHDemo({
     [handleSubmit, cmdHistory, historyIdx]
   )
 
+  const handleMouseDown = useCallback((e: React.MouseEvent) => {
+    setIsDragging(true)
+    setDragStart({
+      x: e.clientX - position.x,
+      y: e.clientY - position.y,
+    })
+  }, [position])
+
+  const handleMouseMove = useCallback((e: MouseEvent) => {
+    if (!isDragging) return
+    
+    const newX = e.clientX - dragStart.x
+    const newY = e.clientY - dragStart.y
+    
+    // Boundary checking to keep terminal on screen
+    const maxX = window.innerWidth - 600 // approx terminal width
+    const maxY = window.innerHeight - 400 // approx terminal height
+    const minX = -window.innerWidth / 2 + 300
+    const minY = -window.innerHeight / 2 + 200
+    
+    setPosition({
+      x: Math.max(minX, Math.min(maxX, newX)),
+      y: Math.max(minY, Math.min(maxY, newY)),
+    })
+  }, [isDragging, dragStart])
+
+  const handleMouseUp = useCallback(() => {
+    setIsDragging(false)
+  }, [])
+
+  // Add global mouse event listeners
+  useEffect(() => {
+    if (isDragging) {
+      document.addEventListener('mousemove', handleMouseMove)
+      document.addEventListener('mouseup', handleMouseUp)
+      return () => {
+        document.removeEventListener('mousemove', handleMouseMove)
+        document.removeEventListener('mouseup', handleMouseUp)
+      }
+    }
+  }, [isDragging, handleMouseMove, handleMouseUp])
+
   if (!isOpen) return null
 
   return (
@@ -816,11 +862,21 @@ export function SSHDemo({
 
       {/* Terminal window */}
       <div
+        ref={terminalRef}
         className="relative z-10 flex flex-col w-full max-w-3xl h-[80vh] max-h-[600px] rounded-lg border border-border overflow-hidden shadow-2xl"
-        style={{ animation: "terminal-in 0.3s cubic-bezier(0.22, 1, 0.36, 1)" }}
+        style={{ 
+          animation: "terminal-in 0.3s cubic-bezier(0.22, 1, 0.36, 1)",
+          transform: `translate(${position.x}px, ${position.y}px)`,
+          cursor: isDragging ? 'grabbing' : 'auto'
+        }}
       >
         {/* Title bar */}
-        <div className="flex items-center justify-between border-b border-border bg-card px-4 py-2.5 shrink-0">
+        <div 
+          className={`flex items-center justify-between border-b border-border bg-card px-4 py-2.5 shrink-0 select-none ${
+            isDragging ? 'cursor-grabbing' : 'cursor-grab'
+          }`}
+          onMouseDown={handleMouseDown}
+        >
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-1.5">
               <button
