@@ -86,23 +86,6 @@ export default function WikiHome() {
           />
         </form>
       </div>
-        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-          Complete documentation for the 9Data Private Data Processing API. 
-          Build powerful data-driven applications with our secure, scalable infrastructure.
-        </p>
-        
-        {/* Search Bar */}
-        <form onSubmit={handleSearch} className="relative max-w-md mx-auto">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input 
-            type="search"
-            placeholder="Search documentation..." 
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10"
-          />
-        </form>
-      </div>
 
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
