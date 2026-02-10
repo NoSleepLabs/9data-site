@@ -87,11 +87,11 @@ export default function Page() {
 
     loadScripts()
 
-    // Auto complete after 4 seconds
+    // Auto complete after 6 seconds
     const timer = setTimeout(() => {
       console.log('Animation complete, showing main site')
       setShowIntro(false)
-    }, 4000)
+    }, 6000)
 
     return () => {
       clearTimeout(timer)
@@ -111,7 +111,7 @@ export default function Page() {
       colors: {
         cube: 0xE0E0E0,
         platform: 0x9E9E9E,
-        ground: 0x444444, // Dark ground instead of yellow
+        ground: 0x000000, // Transparent (black)
         background: 0x000000 // Black background
       }
     }
@@ -177,7 +177,11 @@ export default function Page() {
 
     function newGround() {
       const geometry = new THREE.PlaneGeometry(20, 20, 1, 1)
-      const material = new THREE.MeshLambertMaterial({ color: Animation.colors.ground })
+      const material = new THREE.MeshBasicMaterial({ 
+        color: Animation.colors.ground,
+        transparent: true,
+        opacity: 0.1 // Very transparent floor
+      })
       const plane = new THREE.Mesh(geometry, material)
       plane.receiveShadow = true
       plane.rotation.x = getDegree(-90)
