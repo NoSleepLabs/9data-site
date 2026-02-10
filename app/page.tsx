@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react"
 import { SplashIntro } from "@/components/splash-intro"
+import PortalOverlay from "@/components/portal-overlay"
 import { Navbar } from "@/components/navbar"
 import { Hero } from "@/components/hero"
 import { About } from "@/components/about"
@@ -15,6 +16,7 @@ import { SSHDemo } from "@/components/ssh-demo"
 
 export default function Page() {
   const [splashDone, setSplashDone] = useState(false)
+  const [portalOpen, setPortalOpen] = useState(false)
   const [demoOpen, setDemoOpen] = useState(false)
   const handleSplashComplete = useCallback(() => setSplashDone(true), [])
 
@@ -40,6 +42,8 @@ export default function Page() {
       </main>
 
       <SSHDemo isOpen={demoOpen} onClose={() => setDemoOpen(false)} />
+      {portalOpen && <PortalOverlay onClose={() => setPortalOpen(false)} duration={6000} />}
+      <button onClick={() => setPortalOpen(true)} style={{ position:'fixed', right: 20, bottom: 20, padding: '8px 12px', borderRadius: 6, background: '#fff', border: '1px solid #ccc', fontFamily: 'Open Sans, sans-serif' }}>Aperture Help Desk</button>
     </>
   )
 }
