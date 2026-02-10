@@ -34,13 +34,9 @@ export function SplashIntro({ onComplete }: { onComplete: () => void }) {
       </div>
 
       <div className="relative flex flex-col items-center">
-        {/* 3D Spinning logo container */}
+        {/* Simple spinning logo container */}
         <div
           className="relative z-10"
-          style={{
-            perspective: "1000px",
-            transformStyle: "preserve-3d",
-          }}
         >
           <div
             className="relative"
@@ -52,84 +48,33 @@ export function SplashIntro({ onComplete }: { onComplete: () => void }) {
                   ? "splash-3d-rotate 3s linear infinite"
                   : undefined,
               transformStyle: "preserve-3d",
+              perspective: "1000px",
             }}
           >
-            {/* Multiple logo layers for depth effect */}
-            <div className="relative" style={{ transformStyle: "preserve-3d" }}>
-              {/* Front layer */}
-              <div
-                className="absolute"
-                style={{
-                  transform: "translateZ(20px)",
-                }}
-              >
-                <Image
-                  src="https://files.catbox.moe/xmthif.png"
-                  alt="9Data Front"
-                  width={80}
-                  height={80}
-                  className="dark:invert opacity-90"
-                  priority
-                />
-              </div>
-              
-              {/* Middle layer */}
-              <div
-                className="absolute"
-                style={{
-                  transform: "translateZ(0px) scale(0.9)",
-                  opacity: 0.6,
-                }}
-              >
-                <Image
-                  src="https://files.catbox.moe/xmthif.png"
-                  alt="9Data Middle"
-                  width={80}
-                  height={80}
-                  className="dark:invert"
-                  priority
-                />
-              </div>
-              
-              {/* Back layer */}
-              <div
-                className="absolute"
-                style={{
-                  transform: "translateZ(-20px) scale(0.8)",
-                  opacity: 0.3,
-                }}
-              >
-                <Image
-                  src="https://files.catbox.moe/xmthif.png"
-                  alt="9Data Back"
-                  width={80}
-                  height={80}
-                  className="dark:invert blur-sm"
-                  priority
-                />
-              </div>
-            </div>
+            {/* Main logo */}
+            <Image
+              src="https://files.catbox.moe/xmthif.png"
+              alt="9Data"
+              width={80}
+              height={80}
+              className="dark:invert relative z-20"
+              priority
+              style={{
+                transform: "translateZ(0px)",
+                filter: "drop-shadow(0 0 20px rgba(34, 197, 94, 0.5))",
+              }}
+            />
             
-            {/* 3D Glow rings */}
+            {/* Glow ring */}
             <div
-              className={`absolute -inset-8 rounded-full transition-opacity duration-1000 ${
+              className={`absolute inset-0 rounded-full transition-opacity duration-1000 ${
                 phase === "hold" || phase === "exit"
                   ? "opacity-60"
                   : "opacity-20"
               }`}
               style={{
-                background: "radial-gradient(circle, rgba(34, 197, 94, 0.3) 0%, transparent 70%)",
-                transform: "rotateX(60deg) translateZ(-30px)",
-              }}
-            />
-            <div
-              className={`absolute -inset-6 rounded-full border-2 transition-opacity duration-1000 ${
-                phase === "hold" || phase === "exit"
-                  ? "opacity-40 border-primary/40"
-                  : "opacity-10 border-primary/20"
-              }`}
-              style={{
-                transform: "rotateX(60deg) translateZ(-25px)",
+                background: "radial-gradient(circle, rgba(34, 197, 94, 0.2) 0%, transparent 70%)",
+                transform: "scale(1.5) translateZ(-10px)",
               }}
             />
           </div>
