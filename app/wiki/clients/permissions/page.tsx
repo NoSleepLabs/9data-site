@@ -10,7 +10,8 @@ import {
   Key,
   Eye,
   Settings,
-  Ban
+  Ban,
+  Edit
 } from "lucide-react"
 
 export const metadata: Metadata = {
