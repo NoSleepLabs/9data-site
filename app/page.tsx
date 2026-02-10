@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState, useCallback } from "react"
+import { useTheme } from "next-themes"
 import { Navbar } from "@/components/navbar"
 import { Hero } from "@/components/hero"
 import { About } from "@/components/about"
@@ -17,6 +18,7 @@ export default function Page() {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const canvasRef = useRef<HTMLDivElement>(null)
+  const { resolvedTheme } = useTheme()
 
   const handleIntroComplete = useCallback(() => {
     setShowIntro(false)
@@ -109,10 +111,10 @@ export default function Page() {
       duration: 1.5,
       delay: 0.5,
       colors: {
-        cube: 0xE0E0E0,
-        platform: 0x9E9E9E,
-        ground: 0x000000, // Transparent (black)
-        background: 0x000000 // Black background
+        cube: resolvedTheme === 'dark' ? 0xFFFFFF : 0x000000, // White cube in dark mode, black cube in light mode
+        platform: resolvedTheme === 'dark' ? 0x666666 : 0xCCCCCC, // Gray platforms
+        ground: resolvedTheme === 'dark' ? 0x111111 : 0xEEEEEE, // Dark/light ground
+        background: resolvedTheme === 'dark' ? 0x000000 : 0xFFFFFF // Black background in dark mode, white in light mode
       }
     }
 
@@ -292,7 +294,7 @@ export default function Page() {
               margin: 0;
               padding: 0;
               overflow: hidden;
-              background-color: #000000;
+              background-color: ${resolvedTheme === 'dark' ? '#000000' : '#FFFFFF'};
             }
 
             .canvas-container {
@@ -309,12 +311,16 @@ export default function Page() {
 
           {/* Error State */}
           {error && (
-            <div className="fixed inset-0 flex items-center justify-center bg-black z-50">
-              <div className="text-center text-white">
+            <div className={`fixed inset-0 flex items-center justify-center z-50`} style={{backgroundColor: resolvedTheme === 'dark' ? '#000000' : '#FFFFFF'}}>
+              <div className={`text-center ${resolvedTheme === 'dark' ? 'text-white' : 'text-black'}`}>
                 <p className="mb-4 font-mono text-sm">Error: {error}</p>
                 <button 
                   onClick={() => window.location.reload()}
-                  className="px-4 py-2 bg-white text-black font-mono text-sm rounded hover:bg-gray-200 transition-colors"
+                  className={`px-4 py-2 font-mono text-sm rounded hover:opacity-80 transition-opacity ${
+                    resolvedTheme === 'dark' 
+                      ? 'bg-white text-black hover:bg-gray-200' 
+                      : 'bg-black text-white hover:bg-gray-800'
+                  }`}
                 >
                   Retry
                 </button>
